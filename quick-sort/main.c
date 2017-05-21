@@ -4,34 +4,24 @@
 #define MAX_WORDS 2048
 #define MAX_CHAR 255
 
-void SWAP(char str1[], char str2[]);
-
 typedef struct word{
     char str[MAX_CHAR];
     int freq;
 }word;
 
-/*
-void quicksort(char** list, int left, int right){ // sort from the prof
-    int pivot, i, j;
-    if(left<right){
-        pivot=list[left].key;
-        do{
-            do i++;
-            while(list[i].key<pivot);
-            do j--;
-            while(list[j].key>pivot);
-            if(i<j)
-                SWAP(list[i], list[j]);
-        }
-        while(i<j){
-            SWAP(list[left], list[i]);
-            quicksort(list, left, j-1);
-            quicksort(list, j+1, right);
+void remove_trailing_dot(char str[]){
+    int removed = 0;
+    for(int i = 0; str[i] != '\0' && i < MAX_CHAR ; i++){
+        if (str[i]=='.' && str[i+1]=='\0'){ //if str[i] is a trailing dot
+            str[i]='\0'; // remove it
+            removed = 1;
         }
     }
+    if (removed == 1){
+    printf("dot removed: %s\n",str);
+    }
 }
-*/
+
 
 // This Quick Sort algorithm refers to CLRS book: intro to algorithm.
 void swap(word *a, word *b){
@@ -54,7 +44,7 @@ int partition(word words[], int low, int high){
     return i;
 }
 
-void quickSort(word words[], low, high){
+void quickSort(word words[], int low, int high){
     if (low < high){
         int pivot_index = partition(words, low, high);
         quickSort(words, low, pivot_index - 1);
@@ -92,7 +82,10 @@ int main(){
 
     //Copy all str_from_file into words
     int index = 0;
-    while(fscanf(fp, "%s", str_from_file)==1){
+    while(fscanf(fp, "%s", str_from_file)==1){ // read file and store a word one by one (in each loop) in str_from_file variable.
+
+        remove_trailing_dot(str_from_file); // then remove it
+
         int contd = 0;
         for(int i = 0; i < MAX_WORDS; i++){
             if(strcmp(str_from_file, mywords[i].str)==0){
@@ -137,5 +130,6 @@ int main(){
     for (int i =0; i<5; i++){
         printf("word: %s // frequency: %d\n", mywords[i].str, mywords[i].freq);
     }
+
     return 0;
 }
